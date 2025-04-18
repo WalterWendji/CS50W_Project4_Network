@@ -16,7 +16,24 @@ services:
     
   
   web:
+    container_name: web_server_network
     build: .
+    volumes: 
+      - ./:/usr/src/app/
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /usr/src/app
+          ignore: 
+            - LICENCE
+            - README.md
+        - action: rebuild
+          path: ./requirements.txt
+          target: /usr/src/app/requirements.txt
+        - action: rebuild
+          path: ./wait-for-db.sh
+          target: /usr/src/app/wait-for-db.sh
     ports: 
       - "8000:8000"
     depends_on:
