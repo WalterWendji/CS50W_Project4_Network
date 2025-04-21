@@ -1,10 +1,14 @@
+import json
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+
+from .models import User, Post
 
 
 def index(request):
@@ -61,3 +65,28 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+@csrf_exempt
+@login_required
+def compose_post(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        content = data.get("content")
+
+        post = Post(
+            author_id = request.user,
+            author_name = request.user,
+            content = content
+        ) 
+        post.save()
+    return JsonResponse({"message": "content was post successfully."}, status=201)
+    
+    
+def show_posts(request):
+    
+    posts = Post.objects.select_related('author_id').all()        
+    posts = posts.order_by("-created_at").all()
+    posts = [post_item.serialize() for post_item in posts ]
+
+    return JsonResponse(posts, safe=False)    

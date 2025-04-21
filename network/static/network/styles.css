@@ -1,3 +1,42 @@
-.add-new-post {
-    
+#add-new-post {
+    position: fixed;
+    background-color: rgb(14, 78, 78);
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    box-shadow: 0 10px 6px rgba(0, 0, 0, 0.105);
+}
+
+#add-new-post:hover:active {
+    background-color: rgb(49, 155, 155);
+}
+
+#post-view {
+
+}
+
+#compose-post-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 90vw;
+    margin: 0 auto;
+}
+
+#text-field {
+    min-height: 30vh;
+}
+
+#compose-post-view {
+    margin-top: 30px;
+}
+
+.submit-btns {
+    margin-top: 10px;
+}
+
+li {
+    list-style: none;
 }
