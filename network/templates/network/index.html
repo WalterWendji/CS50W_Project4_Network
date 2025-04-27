@@ -1,28 +1,15 @@
-{% extends "network/layout.html" %}
+{% extends 'network/layout.html' %}
 {% load static %}
 
 {% block body %}
-<div id="post-view">
-    New post view
-    <ul id="post-lists">
-
-    </ul>
-</div>
-{%if user.is_authenticated %}
-    <div id="compose-post-view">
-        <form id="compose-post-form">
-            <label for="text-field">New Post</label>
-            <textarea name="text-field" id="text-field" placeholder="enter what you think here..." required></textarea>
-            <div class="submit-btns">
-                <button id="cancel-post">Cancel</button>
-                <input type="submit" id="post-content" value="Post">
-            </div>
-        </form>
-    </div>
-    <button id="add-new-post"> + </button>
-{% endif %}
+  <div id="post-view">
+    <ul id="post-lists"></ul>
+  </div>
+  <a href="{% url 'new_post' %}">
+    <button id="add-new-post">+</button>
+  </a>
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/network.js' %}"></script>
+  <script src="{% static 'network/network.js' %}"></script>
 {% endblock %}

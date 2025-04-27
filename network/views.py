@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 
@@ -16,6 +16,9 @@ def index(request):
 
 
 def login_view(request):
+    next_url = request.GET.get('next')
+    current_url = next_url if next_url else reverse("index")
+
     if request.method == "POST":
 
         # Attempt to sign user in
@@ -26,13 +29,14 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(current_url)
         else:
             return render(request, "network/login.html", {
-                "message": "Invalid username and/or password."
+                "message": "Invalid username and/or password.",
+                "next":next_url
             })
     else:
-        return render(request, "network/login.html")
+        return render(request, "network/login.html", {'next': next_url})
 
 
 def logout_view(request):
@@ -44,7 +48,7 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
+        
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -89,4 +93,14 @@ def show_posts(request):
     posts = posts.order_by("-created_at").all()
     posts = [post_item.serialize() for post_item in posts ]
 
-    return JsonResponse(posts, safe=False)    
+    return JsonResponse(posts, safe=False) 
+
+@login_required
+def show_compose_view(request):
+    return render(request, "network/new_post_view.html")
+
+""" def show_following_view(request):
+    return render(request, "network/following_page.html")
+
+def profile_page_view(request):
+    return render(request, "network/profile_page.html") """

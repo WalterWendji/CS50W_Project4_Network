@@ -1,28 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-
-    if (document.getElementById('#compose-post-view')) {
-        document.querySelector('#add-new-post').addEventListener('click', () => load_compose_form_box())
-        document.querySelector('#compose-post-form').onsubmit = sent_post 
+    const currentUrl = window.location.pathname;
+    
+    if (currentUrl === "/new_post") { 
+        document.querySelector('#cancel-post').onclick = handle_cancel_process
+        document.querySelector('#compose-post-form').onsubmit = sent_post
+    } else {
+        load_posts();
     }
-    load_posts();
 })
-
-function load_compose_form_box() {
-    document.querySelector('#post-view').style.display = 'none';
-    document.querySelector('#compose-post-view').style.display = 'block';
-    document.querySelector('#add-new-post').style.display = 'none';
-
-    handle_process();
-}
 
 function load_posts() {
     document.querySelector('#post-view').style.display = 'block';
     
-    if(document.getElementById('#compose-post-view')) {
-        document.querySelector('#compose-post-view').style.display = 'none';
-        document.querySelector('#add-new-post').style.display = 'block';
-    }
-
     fetch('/render_posts')
     .then(response => response.json())
     .then(posts => {
@@ -39,10 +28,12 @@ function load_posts() {
 
 
 
-function handle_process () {
-    document.querySelector('#cancel-post').addEventListener('click', () => {
-        load_posts();
-    })
+function handle_cancel_process () {
+    redirectTo("")
+   /*  document.querySelector('#cancel-post').addEventListener('click', () => {
+        //load_posts();
+    }) */
+    return false
 }
 
 function sent_post() {
@@ -54,7 +45,8 @@ function sent_post() {
     })
     .then(response => response.json())
     .then(result => {
-        load_posts();
+        //load_posts();
+        redirectTo("")
         console.log("The content has been posted...")
     })
     .catch(error => {
@@ -69,15 +61,27 @@ function create_post_element(post) {
     const post_element = document.createElement('li')
 
     post_element.innerHTML = `
-        <span> Foo </span>
+        <span> ${post.author_name} </span>
         <p>${post.content}</p>
         <span> ${post.created_at} </span>
         <div>
-            <span> ${post.nb_of_likes === 0 ? '' : post.nb_of_likes} </span>
+            <img src="static/network/icons/heart.svg" alt="like icon" />
+            <span> ${post.nb_of_likes === 0 ? '0' : post.nb_of_likes} </span>
             <span> ${post.nb_of_views === 0 ? '': post.nb_of_views} </span>
         </div>
         <span> Comment </span>
+        <hr />
     `
     document.querySelector('#post-lists').append(post_element)
     
+}
+
+//when a user try to add a post and are note logged in, 
+function create_popup_menu() {
+
+}
+
+
+function redirectTo(url) {
+    window.location.pathname = url
 }

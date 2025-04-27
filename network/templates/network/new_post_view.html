@@ -1,0 +1,19 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block body %}
+  <div id="compose-post-view">
+    <form id="compose-post-form">
+      <label for="text-field">New Post</label>
+      <textarea name="text-field" id="text-field" placeholder="enter what you think here..." required autofocus></textarea>
+      <div class="submit-btns">
+        <button id="cancel-post">Cancel</button>
+        <input type="submit" id="post-content" value="Post" />
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'network/network.js' %}"></script>
+{% endblock %}
